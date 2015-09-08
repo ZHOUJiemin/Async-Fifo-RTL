@@ -1,0 +1,11 @@
+{signal: [
+  {name: 'wrclk',  wave:   'p............'},
+  {name: 'reset',  wave:   '0..1.........'},
+  {name: 'wrptr_bin', wave:   '2.....345=...', data: ['000', '001', '010', '011', '100']},
+  {name: 'wrptr_w', wave: '2.....345=...', data:['000','001', '011', '010','110']},
+  {name: 'rdptr_w', wave: '2............', data:['000']},
+  {name: 'rdptr_bin', wave: '2............', data:['000']},
+  {name: 'push',   wave:   '0....1.......'},
+  {name: 'full',   wave:   '0........1...'},
+  {name: 'data',   wave:   '2.....345=...', data: ['D0', 'D1', 'D2', 'D3', 'D4']}
+]}
