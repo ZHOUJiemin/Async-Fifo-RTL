@@ -47,7 +47,7 @@ always@(posedge wclk or negedge reset_L)
   end
 
 //signal:full
-always(*)
+always@(*)
   if(reset_L == 0)  //if reset is asserted
     full = 1'b 0;
   else
@@ -59,9 +59,13 @@ always(*)
   end
 
 //functions and tasks
-function [PTRWIDTH:0] gray2bin(input [PTRWIDTH:0] graycode)
+function [PTRWIDTH:0] gray2bin(input [PTRWIDTH:0] graycode);
+integer i;
+begin
   gray2bin[PTRWIDTH] = graycode[PTRWIDTH];
-  int i;
-  for(i=PTRWIDTH-1; i>0; i--)
+  for(i=PTRWIDTH-1; i>0; i=i-1)
     gray2bin[i] = gray2bin[i+1] ^ graycode[i];
+end
+endfunction
+
 endmodule
