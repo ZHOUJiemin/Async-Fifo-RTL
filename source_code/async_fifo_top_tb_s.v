@@ -64,7 +64,7 @@ async_fifo_top #(DEPTH, PTRWIDTH, DWIDTH) dut
 //keep writing until full, then wait until the fifo can be written again
 task write_fifo();
 begin
-  forever
+  repeat(16)
   begin
     @(posedge wclk)
     if(!full)  //if not full
@@ -86,7 +86,7 @@ endtask
 //keep reading until empty, then wait until the fifo can be read again
 task read_fifo();
 begin
-  forever
+  repeat(16)
   begin
     @(posedge rclk)
     $fdisplay(fp,"@time = %0t  Data = %02x", $time, rdata);
@@ -110,6 +110,7 @@ initial
 begin
   //create log file
   fp = $fopen("async_fifo_top_test.log","w+");
+  $display("----------Start Simulation----------");
   $fdisplay(fp,"----------Start Simulation----------");
   $fdisplay(fp,"@time = %0t  Signal Initialization", $time);
   //initialization
@@ -123,12 +124,18 @@ begin
   reset_L = 1;
   $fdisplay(fp,"@time = %0t  Released Reset and Start Driving Signals", $time);
   //start to read when empty
+  $display("debug before fork");
   fork
   read_fifo();
+  $display("debug inside fork");
   write_fifo();
   join
+  $display("debug after fork");
   $fdisplay(fp, "@time = %0t  Simulation Finished", $time);
-  #100 $finish;  //terminate the test after 100ns
+  $display("@time = %0t  Simulation Finished", $time);
+  #1000
+  $fclose(fp);
+  $finish;  //terminate the test after 100ns
 end
 
 endmodule
