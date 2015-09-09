@@ -8,11 +8,11 @@ module async_fifo_top#(parameter DEPTH = 16,
                        parameter DWIDTH = 8)
                       (input wclk,
                        input push,
-                       input [WIDTH-1:0] wdata,
+                       input [DWIDTH-1:0] wdata,
                        output full,
                        input rclk,
                        input pop,
-                       output reg [WIDTH-1:0] rdata,
+                       output reg [DWIDTH-1:0] rdata,
                        output empty,
                        input reset_L);
 
@@ -23,47 +23,60 @@ wire [PTRWIDTH:0] wrptr_bin;
 wire [PTRWIDTH:0] rdptr_bin;
 
 //continuous assignment
-assign wrptr_gray = bin2gray(wrptr_bin);
-assign rdptr_gray = bin2gray(rdptr_bin);
+assign wrptr_gray = bin2gray_wr(wrptr_bin);
+assign rdptr_gray = bin2gray_rd(rdptr_bin);
 
 //memory declaration(instantiation)
-reg [WIDTH-1:0] mem [0:DEPTH-1];
+reg [DWIDTH-1:0] mem [0:DEPTH-1];
 
 //instantiation
-controller_wr ctrl_wr #(PTRWIDTH)(
+controller_wr #(PTRWIDTH) ctrl_wr(
   .wclk(wclk),
   .reset_L(reset_L),
   .push(push),
   .full(full),
-  .wrptr_bin(wrptr_gray),
+  .wrptr_bin(wrptr_bin),  //modified on 0909 wrptr_gray->wrptr_bin
   .rdptr_gray(rdptr_gray)
   );
 
-controller_rd ctrl_rd #(PTRWIDTH)(
+controller_rd #(PTRWIDTH) ctrl_rd(
   .rclk(rclk),
   .reset_L(reset_L),
   .pop(pop),
   .empty(empty),
-  .rdptr_bin(rdptr_gray),
+  .rdptr_bin(rdptr_bin),  //modified on 0909 rdptr_gray->rdptr_bin
   .wrptr_gray(wrptr_gray)
   );
 
 //functions and tasks
-automatic function [PTRWIDTH:0] bin2gray(input [PTRWIDTH:0] binary);
-  int i;
-  for(i=0; i<PTRWIDTH-1; i++)
-    bin2gray[i] = binary[i]^binary[i+1];
-  bin2gray[PTRWIDTH] = binary[PTRWIDTH];
+function [PTRWIDTH:0] bin2gray_wr(input [PTRWIDTH:0] binary);
+integer i;
+begin
+  for(i=0; i<PTRWIDTH; i=i+1) //modified on 0909, sovled the "MSB is unknown" problem
+  //for(i=0; i<PTRWIDTH-1; i=i+1)
+    bin2gray_wr[i] = binary[i]^binary[i+1];
+  bin2gray_wr[PTRWIDTH] = binary[PTRWIDTH];
+end
+endfunction
+
+function [PTRWIDTH:0] bin2gray_rd(input [PTRWIDTH:0] binary);
+integer i;
+begin
+  for(i=0; i<PTRWIDTH; i=i+1) //modified on 0909, sovled the "MSB is unknown" problem
+  //for(i=0; i<PTRWIDTH-1; i=i+1)
+    bin2gray_rd[i] = binary[i]^binary[i+1];
+  bin2gray_rd[PTRWIDTH] = binary[PTRWIDTH];
+end
 endfunction
 
 //process
-  always(*)
+  always@(*)
   begin
     if(push && !full) //ok to write
       mem[wrptr_bin] = wdata;
   end
 
-  always(*)
+  always@(*)
   begin
     if(pop && !empty) //ok to read
       rdata = mem[rdptr_bin];

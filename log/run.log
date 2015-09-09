@@ -1,0 +1,99 @@
+[2015-09-09 08:41:07 EDT] vcs -licqueue '-timescale=1ns/1ns' '+vcs+flush+all' '+warn=all' '-sverilog' design.sv testbench.sv  && ./simv +vcs+lic+wait
+                         Chronologic VCS (TM)
+         Version J-2014.12-SP1-1 -- Wed Sep  9 12:41:09 2015
+               Copyright (c) 1991-2014 by Synopsys Inc.
+                         ALL RIGHTS RESERVED
+
+This program is proprietary and confidential information of Synopsys Inc.
+and may be used and disclosed only as authorized in a license agreement
+controlling such use and disclosure.
+
+Parsing design file 'design.sv'
+Parsing included file 'controller_wr.v'.
+Back to file 'design.sv'.
+Parsing included file 'controller_rd.v'.
+Back to file 'design.sv'.
+Parsing design file 'testbench.sv'
+Top Level Modules:
+       async_fifo_top_tb_s
+TimeScale is 1 ns / 1 ns
+Starting vcs inline pass...
+2 modules and 0 UDP read.
+recompiling module async_fifo_top_tb_s
+Both modules done.
+rm -f _csrc*.so linux_scvhdl_*.so pre_vcsobj_*.so share_vcsobj_*.so
+ld -m elf_i386 -shared  -o .//../simv.daidir//_csrc0.so amcQwB.o
+rm -f _csrc0.so
+if [ -x ../simv ]; then chmod -x ../simv; fi
+g++  -o ../simv  -m32 -m32   -Wl,-rpath-link=./ -Wl,-rpath='$ORIGIN'/simv.daidir/ -Wl,-rpath='$ORIGIN'/simv.daidir//scsim.db.dir    _281_archive_1.so _csrc0.so  SIM_l.o  _csrc0.so     rmapats_mop.o rmapats.o rmar.o  rmar_llvm_0_1.o rmar_llvm_0_0.o          /apps/vcsmx/linux/lib/libzerosoft_rt_stubs.so /apps/vcsmx/linux/lib/libvirsim.so /apps/vcsmx/linux/lib/liberrorinf.so /apps/vcsmx/linux/lib/libsnpsmalloc.so    /apps/vcsmx/linux/lib/libvcsnew.so /apps/vcsmx/linux/lib/libuclinative.so   -Wl,-whole-archive /apps/vcsmx/linux/lib/libvcsucli.so -Wl,-no-whole-archive          /apps/vcsmx/linux/lib/vcs_save_restore_new.o /apps/vcsmx/linux/lib/ctype-stubs_32.a -ldl  -lc -lm -lpthread -ldl
+../simv up to date
+CPU time: .319 seconds to compile + .331 seconds to elab + .211 seconds to link
+Chronologic VCS simulator copyright 1991-2014
+Contains Synopsys proprietary information.
+Compiler version J-2014.12-SP1-1; Runtime version J-2014.12-SP1-1;  Sep  9 12:41 2015
+----------Start Simulation----------
+@time = 0  Signal Initialization
+@time = 100  Released Reset and Start Driving Signals
+@time = 115  Sent a Push Request
+@time = 120  Pop Data Out Failed, FIFO is empty
+@time = 140  Pop Data Out Failed, FIFO is empty
+@time = 145  Push Data In Successfully, Data = 0x03
+@time = 145  Sent a Push Request
+@time = 160  Pop Data Out Failed, FIFO is empty
+@time = 175  Push Data In Successfully, Data = 0x0b
+@time = 175  Sent a Push Request
+@time = 180  Pop Data Out Failed, FIFO is empty
+@time = 200  Sent a Pop Request
+@time = 205  Push Data In Successfully, Data = 0x0e
+@time = 205  Sent a Push Request
+@time = 220  Pop Data Out Successfully, Data = 0x03
+@time = 220  Sent a Pop Request
+@time = 235  Push Data In Successfully, Data = 0x0f
+@time = 235  Sent a Push Request
+@time = 240  Pop Data Out Successfully, Data = 0x0b
+@time = 240  Sent a Pop Request
+@time = 260  Pop Data Out Successfully, Data = 0x0e
+@time = 260  Sent a Pop Request
+@time = 265  Push Data In Successfully, Data = 0x0d
+@time = 265  Sent a Push Request
+@time = 280  Pop Data Out Successfully, Data = 0x0f
+@time = 280  Sent a Pop Request
+@time = 295  Push Data In Successfully, Data = 0x09
+@time = 295  Sent a Push Request
+@time = 300  Pop Data Out Successfully, Data = 0x0f
+@time = 300  Pop Data Out Failed, FIFO is empty
+@time = 320  Sent a Pop Request
+@time = 325  Push Data In Successfully, Data = 0x0d
+@time = 325  Sent a Push Request
+@time = 340  Pop Data Out Successfully, Data = 0x09
+@time = 340  Sent a Pop Request
+@time = 355  Push Data In Successfully, Data = 0x07
+@time = 355  Sent a Push Request
+@time = 360  Pop Data Out Successfully, Data = 0x09
+@time = 360  Pop Data Out Failed, FIFO is empty
+@time = 380  Sent a Pop Request
+@time = 385  Push Data In Successfully, Data = 0x0f
+@time = 385  Sent a Push Request
+@time = 400  Pop Data Out Successfully, Data = 0x07
+@time = 400  Sent a Pop Request
+@time = 415  Push Data In Successfully, Data = 0x0a
+@time = 415  Sent a Push Request
+@time = 420  Pop Data Out Successfully, Data = 0x07
+@time = 420  Pop Data Out Failed, FIFO is empty
+@time = 445  Push Data In Successfully, Data = 0x07
+@time = 445  Sent a Push Request
+@time = 475  Push Data In Successfully, Data = 0x04
+@time = 475  Sent a Push Request
+@time = 505  Push Data In Successfully, Data = 0x0a
+@time = 505  Sent a Push Request
+@time = 535  Push Data In Successfully, Data = 0x02
+@time = 535  Sent a Push Request
+@time = 565  Push Data In Successfully, Data = 0x0e
+@time = 565  Sent a Push Request
+@time = 565  Simulation Finished
+$finish called from file "testbench.sv", line 166.
+$finish at simulation time                  665
+           V C S   S i m u l a t i o n   R e p o r t
+Time: 665 ns
+CPU Time:      0.240 seconds;       Data structure size:   0.0Mb
+Wed Sep  9 12:41:10 2015
