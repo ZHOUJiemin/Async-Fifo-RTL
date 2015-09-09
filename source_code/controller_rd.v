@@ -49,7 +49,7 @@ always@(posedge rclk or negedge reset_L)
 //signal:empty
 always@(*)
   if(reset_L == 0)  //if reset is asserted
-    empty = 1'b 0;
+    empty = 1'b 1;  //modified by jiemin on 0909, reset value for empty is 1
   else
   begin
     if(wrptr_bin == rdptr_bin)
@@ -63,7 +63,8 @@ function [PTRWIDTH:0] gray2bin(input [PTRWIDTH:0] graycode);
 integer i;
 begin
   gray2bin[PTRWIDTH] = graycode[PTRWIDTH];
-  for(i=PTRWIDTH-1; i>0; i=i-1)
+  for(i=PTRWIDTH-1; i>=0; i=i-1)  //modified on 0909, solved the "LSB is unknown" problem
+  //for(i=PTRWIDTH-1; i>0; i=i-1)
     gray2bin[i] = gray2bin[i+1] ^ graycode[i];
 end
 endfunction
