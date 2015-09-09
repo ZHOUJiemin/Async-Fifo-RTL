@@ -1,0 +1,26 @@
+created by jiemin on 20150909
+asynchronous fifo -- bug list
+
+Bug List
+
+Date: 20150909
+File: controller_rd.v
+Description: reset value for "empty" should be set to "1"
+Modification: set reset value to "1"
+
+Date: 20150909
+File: async_fifo_top.v
+Description: misconnection of wire rdptr_gray and wrptr_gray
+Modification: changed to rdptr_bin and wrptr_bin
+
+Date: 20150909
+File: async_fifo_top.v
+      controller_rd.v
+      controller_wr.v
+Description: fixed a bug in the bin2gray functions and in the gray2bin functions
+Modification: modified the index judgement in the for loop
+
+Date: 20150909
+File: controller_wr.v
+Description: fixed a bug and solved the "always full" problem
+Modification: fixed the if statement that generates the full flag

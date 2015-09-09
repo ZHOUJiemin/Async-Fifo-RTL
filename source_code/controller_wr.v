@@ -52,7 +52,8 @@ always@(*)
     full = 1'b 0;
   else
   begin
-    if(wrptr_bin[PTRWIDTH]^rdptr_bin[PTRWIDTH] || wrptr_bin[PTRWIDTH-1:0]==rdptr_bin[PTRWIDTH-1:0])
+    //if((wrptr_bin[PTRWIDTH]^rdptr_bin[PTRWIDTH]) || (wrptr_bin[PTRWIDTH-1:0]==rdptr_bin[PTRWIDTH-1:0]))
+    if((wrptr_bin[PTRWIDTH]^rdptr_bin[PTRWIDTH]) && (wrptr_bin[PTRWIDTH-1:0]==rdptr_bin[PTRWIDTH-1:0])) //modified on 0909 bug fixed
       full = 1'b 1;
     else
       full = 1'b 0;
@@ -63,7 +64,12 @@ function [PTRWIDTH:0] gray2bin(input [PTRWIDTH:0] graycode);
 integer i;
 begin
   gray2bin[PTRWIDTH] = graycode[PTRWIDTH];
+<<<<<<< HEAD
   for(i=PTRWIDTH-1; i>0; i=i-1)
+=======
+  for(i=PTRWIDTH-1; i>=0; i=i-1)  //modified on 0909, solved the "LSB is unknown" problem
+  //for(i=PTRWIDTH-1; i>0; i=i-1)
+>>>>>>> master
     gray2bin[i] = gray2bin[i+1] ^ graycode[i];
 end
 endfunction
