@@ -1,0 +1,23 @@
+//created by jiemin on 20150910
+//asynchronous fifo -- test plan
+
+test item list:
+1. try write and read when reset is asserted
+2. release reset and try write and read with random data
+3. keep writing until the fifo is full and see the full flag
+4. read before write and see the empty flag
+5. write random times of random data, then keep reading until the fifo is empty
+6. try read and write at the same time when both ptr is 0(fifo empty)
+7. try read and write at the same time when both wrptr is max and rdptr is 0(fifo full)
+8. try write and read by issuing transaction commands with random intervals
+
+methodology:VMM
+generator -- generate random number of transaction commands(push/pop) with random data, should be able to insert intervals(use callbacks)
+use a mailbox to send a transcation to the driver
+
+driver -- drive signals of the interface
+get a transaction from the generator via a mailbox. check the full and empty flag to see if the transaction can be issued. drive the signals if it is ok to push or pop and then remove the transaction from the mailbox so that the generator can then issuse another transaction. At the same time, put the data in a the scoreboard(queue) so that it can be confirmed later whether a push or pop is successful.
+there should be two drivers for each will be responsible for the pushing and popping respectively
+
+scoreboard -- check if the read data is the same with the write data
+get data from the driver and monitor and compare them. record the number of successful transactions and failed transactions
