@@ -52,12 +52,8 @@ controller_rd #(PTRWIDTH) ctrl_rd(
 function [PTRWIDTH:0] bin2gray_wr(input [PTRWIDTH:0] binary);
 integer i;
 begin
-<<<<<<< HEAD
-  for(i=0; i<PTRWIDTH-1; i=i+1)
-=======
   for(i=0; i<PTRWIDTH; i=i+1) //modified on 0909, sovled the "MSB is unknown" problem
   //for(i=0; i<PTRWIDTH-1; i=i+1)
->>>>>>> master
     bin2gray_wr[i] = binary[i]^binary[i+1];
   bin2gray_wr[PTRWIDTH] = binary[PTRWIDTH];
 end
@@ -66,12 +62,8 @@ endfunction
 function [PTRWIDTH:0] bin2gray_rd(input [PTRWIDTH:0] binary);
 integer i;
 begin
-<<<<<<< HEAD
-  for(i=0; i<PTRWIDTH-1; i=i+1)
-=======
   for(i=0; i<PTRWIDTH; i=i+1) //modified on 0909, sovled the "MSB is unknown" problem
   //for(i=0; i<PTRWIDTH-1; i=i+1)
->>>>>>> master
     bin2gray_rd[i] = binary[i]^binary[i+1];
   bin2gray_rd[PTRWIDTH] = binary[PTRWIDTH];
 end

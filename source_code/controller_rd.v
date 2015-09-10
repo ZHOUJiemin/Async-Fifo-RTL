@@ -63,12 +63,8 @@ function [PTRWIDTH:0] gray2bin(input [PTRWIDTH:0] graycode);
 integer i;
 begin
   gray2bin[PTRWIDTH] = graycode[PTRWIDTH];
-<<<<<<< HEAD
-  for(i=PTRWIDTH-1; i>0; i=i-1)
-=======
   for(i=PTRWIDTH-1; i>=0; i=i-1)  //modified on 0909, solved the "LSB is unknown" problem
   //for(i=PTRWIDTH-1; i>0; i=i-1)
->>>>>>> master
     gray2bin[i] = gray2bin[i+1] ^ graycode[i];
 end
 endfunction
