@@ -1,5 +1,8 @@
 //created by jiemin on 20150909
 //asynchronous fifo -- systemverilog testbench
+<<<<<<< HEAD
+module tb;
+=======
 
 //include files
 `include "async_fifo_top.v"
@@ -66,5 +69,6 @@ rclk = 0;
 #RDCLKSTART
 forever #RDHALFCYCLE rclk = ~rclk;
 end
+>>>>>>> master
 
 endmodule
