@@ -5,7 +5,6 @@ class Tranx;
   rand int datanum;
   rand int interval;
 
-  int wr_rd; //0 for write and 1 for read
   int remain; //remaining data
 
   contraint data_num_in_one_trasaction{   //number of data is limited
@@ -19,9 +18,8 @@ class Tranx;
   }
 
   //methods
-  function new(int remain, int wr_rd);
+  function new(int remain);
     this.remain = remain;
-    this.wr_rd = wr_rd;
   endfunction
 
 endclass

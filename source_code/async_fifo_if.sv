@@ -9,19 +9,19 @@ interface async_fifo_if#(parameter DWIDTH = 8)(input bit wclk, rclk);
   logic empty;
   bit reset_L;
 
-clocking wrcb_tb @(posedge wclk);
+clocking wrcb @(posedge wclk);
   output push;
   output wdata;
   input full;
 endclocking
 
-clocking rdcb_tb @(posedge rclk);
+clocking rdcb @(posedge rclk);
   output pop;
   input rdata;
   input empty;
 endclocking
 
-modport wrdrv_mp(clocking wrcb_tb);
-modport rddrv_mp(clocking rdcb_tb);
+modport drv_mp(clocking wrcb_tb);   //modified on 0911
+modport mon_mp(clocking rdcb_tb);   //change rddrv to mon
 
 endinterface
