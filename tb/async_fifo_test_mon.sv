@@ -34,7 +34,7 @@ class Monitor;
       @(fifo_if.rdcb);
     foreach(read_data[i])
     begin
-      @(fifo.rdcb)
+      @(fifo_if.rdcb)
       begin
         if(rd_success)
         begin

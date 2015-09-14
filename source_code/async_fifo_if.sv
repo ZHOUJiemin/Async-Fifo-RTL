@@ -21,7 +21,23 @@ clocking rdcb @(posedge rclk);
   input empty;
 endclocking
 
-modport drv_mp(clocking wrcb_tb);   //modified on 0911
-modport mon_mp(clocking rdcb_tb);   //change rddrv to mon
+modport dut(input push,             //added on 0914
+            input wdata,
+            output full,
+            input pop,
+            output rdata,
+            output empty,
+            input reset_L);
+
+modport test(output push,           //added on 0914
+             output wdata,
+             input full,
+             output pop,
+             input rdata,
+             input empty,
+             output reset_L);
+
+modport drv_mp(clocking wrcb);   //modified on 0914
+modport mon_mp(clocking rdcb);   //change rddrv to mon
 
 endinterface

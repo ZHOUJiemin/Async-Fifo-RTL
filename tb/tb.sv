@@ -1,15 +1,16 @@
 //created by jiemin on 20150909
 //asynchronous fifo -- systemverilog testbench
 
+//time unit and time precision
+timeunit 1ns;
+timeprecision 1ps;
+
 //include files
 `include "async_fifo_top.v"
 `include "async_fifo_if.sv"
 `include "async_fifo_test.sv"
 
 module tb;
-//time unit and time precision
-timeunit 1ns;
-timeprecision 1ps;
 
 //parameters
 parameter DEPTH = 16;
@@ -29,27 +30,33 @@ bit rclk;
 
 //instantiation
 //interface
-async_fifo_if #(.DWIDTH(DWIDTH)) fifo_if (
+async_fifo_if #(.DWIDTH(DWIDTH)) fifo_if_drv (
+    .wclk(wclk),
+    .rclk(rclk)
+  );
+
+async_fifo_if #(.DWIDTH(DWIDTH)) fifo_if_mon (
     .wclk(wclk),
     .rclk(rclk)
   );
 
 //dut
 async_fifo_top #(DEPTH, PTRWIDTH, DWIDTH) fifo (
-    .wclk(fifo_if.wclk),
-    .push(fifo_if.push),
-    .wdata(fifo_if.wdata),
-    .full(fifo_if.full),
-    .rclk(fifo_if.rclk),
-    .pop(fifo_if.pop),
-    .rdata(fifo_if.rdata),
-    .empty(fifo_if.empty),
-    .reset_L(fifo_if.reset_L)
+    .wclk(fifo_if_drv.wclk),
+    .push(fifo_if_drv.push),
+    .wdata(fifo_if_drv.wdata),
+    .full(fifo_if_drv.full),
+    .rclk(fifo_if_mon.rclk),
+    .pop(fifo_if_mon.pop),
+    .rdata(fifo_if_mon.rdata),
+    .empty(fifo_if_mon.empty),
+    .reset_L(fifo_if_drv.reset_L)
   );
 
 //test program
 async_fifo_test #(DEPTH, PTRWIDTH, DWIDTH) test(
-    .fifo_if(fifo_if)
+    .fifo_if_drv(fifo_if_drv),
+    .fifo_if_mon(fifo_if_mon)
   );
 
 //clock generator

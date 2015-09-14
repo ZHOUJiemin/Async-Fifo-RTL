@@ -36,11 +36,13 @@ class Environment;
   Config cfg;
 
   //virtual interfaces
-  vfifo_if fifo_if;
+  vfifo_if_drv fifo_if_drv;   //modified on 0914
+  vfifo_if_mon fifo_if_mon;
 
   //constructor
-  function new(vfifo_if fifo_if);
-    this.fifo_if = fifo_if;
+  function new(vfifo_if_drv fifo_if_drv, vfifo_if_mon fifo_if_mon); //modified on 0914
+    this.fifo_if_drv = fifo_if_drv;
+    this.fifo_if_mon = fifo_if_mon;
   endfunction
 
   //methods
@@ -70,8 +72,8 @@ function void Environment::build();
   mon2scb = new();
   //build up the transactors here
   gen = new(gen2drv, gen2mon, cfg);
-  drv = new(fifo_if.drv_mp, gen2drv, drv2scb); //pass interface by using modports
-  mon = new(fifo_if.mon_mp, gen2mon, mon2scb); //pass interface by using modports
+  drv = new(fifo_if_drv, gen2drv, drv2scb); //pass interface by using modports
+  mon = new(fifo_if_mon, gen2mon, mon2scb); //pass interface by using modports
   scb = new(drv2scb, mon2scb, cfg); //the scoreboard need to know how many data are transferred
 endfunction
 

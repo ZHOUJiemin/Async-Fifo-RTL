@@ -64,11 +64,11 @@ class Driver;
     write_data = new [dataintranx];  //allocate memory
     foreach(write_data[i])           //randomize data
     begin
-      write_data[i] = urandom_range(0,255);
+      write_data[i] = $urandom_range(0,255);
       drv2scb.push_back(write_data[i]);   //send the data to scoreboard
     end
     send(interval, write_data);
-    $display("@time %4t,  Write Transaction: Push %0d Data In, Interval %d", $time, dataintranx, Interval);
+    $display("@time %4t,  Write Transaction: Push %0d Data In, Interval %d", $time, dataintranx, interval);
     end while(tranx.remain > tranx.datanum); //if there are still data to send
   endtask
 

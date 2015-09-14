@@ -4,7 +4,8 @@
 program automatic async_fifo_test #(parameter DEPTH = 16,
                                     parameter PTRWIDTH = 4,
                                     parameter DWIDTH = 8)
-                                   (async_fifo_if fifo_if);
+                                   (async_fifo_if fifo_if_drv,
+                                    async_fifo_if fifo_if_mon);
 //include files
 `include "async_fifo_test_env.sv"
 
@@ -15,10 +16,10 @@ Environment env;
 initial
 begin
   $display("@time %4t  Simulation Start", $time);
-  env = new(fifo_if);
-  fifo_if.reset_L = 0;
+  env = new(fifo_if_drv, fifo_if_mon);
+  fifo_if_drv.reset_L = 0;
   #100
-  fifo_if.reset_L = 1;  //release reset_L
+  fifo_if_drv.reset_L = 1;  //release reset_L
   $display("@time %4t  Reset Released", $time);
   env.gen_cfg();
   env.build();
