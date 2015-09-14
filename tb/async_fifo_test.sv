@@ -23,7 +23,7 @@ begin
   env.gen_cfg();
   env.build();
   env.run();
-  env.wrap();
+  env.wrap_up();
   $display("@time %4t  Simulation Finished", $time);
 end
 

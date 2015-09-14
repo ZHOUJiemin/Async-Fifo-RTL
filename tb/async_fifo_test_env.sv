@@ -5,12 +5,15 @@
 //@0911 wrdrv changed to drv, rddrv changed to mon
 //---------------------------------------------------------
 typedef virtual async_fifo_if vfifo_if;
+typedef virtual async_fifo_if.drv_mp vfifo_if_drv;
+typedef virtual async_fifo_if.mon_mp vfifo_if_mon;
 typedef logic [7:0] data;
 
 //include files
 `include "async_fifo_test_tranx.sv"
 `include "async_fifo_test_cfg.sv"
 `include "async_fifo_test_drv.sv"
+`include "async_fifo_test_mon.sv"
 `include "async_fifo_test_scb.sv"
 `include "async_fifo_test_gen.sv"
 
@@ -43,8 +46,8 @@ class Environment;
   //methods
   extern virtual function void gen_cfg();
   extern virtual function void build();
-  extern virtual function void run();
-  extern virtual function void wrap();
+  extern virtual task run();
+  extern virtual function void wrap_up();
 endclass
 
 //methods definition
@@ -72,7 +75,7 @@ function void Environment::build();
   scb = new(drv2scb, mon2scb, cfg); //the scoreboard need to know how many data are transferred
 endfunction
 
-function void Environment::run();
+task Environment::run();
   //get things working here
   fork
     gen.run();
@@ -80,9 +83,9 @@ function void Environment::run();
     mon.run();
     scb.run();
   join
-endfunction
+endtask
 
-function void Environment::wrap();
+function void Environment::wrap_up();
   //don't know exactly what to do here
   $display("@time %4t  Test Wrapping Up");
   //display the result from the scoreboard

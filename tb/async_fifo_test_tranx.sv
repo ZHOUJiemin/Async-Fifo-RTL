@@ -7,7 +7,7 @@ class Tranx;
 
   int remain; //remaining data
 
-  contraint data_num_in_one_trasaction{   //number of data is limited
+  constraint data_num_in_one_trasaction{   //number of data is limited
     datanum > 0;
     datanum <= remain;
   }

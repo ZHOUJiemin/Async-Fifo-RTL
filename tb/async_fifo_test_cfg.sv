@@ -8,9 +8,9 @@ class Config;
   int good_count;
   int bad_count;
 
-  contraint total_data_num{
-    datatopush >= 0;
-    datatopush <= 30;
+  constraint total_data_num{
+    totaldatanum >= 0;
+    totaldatanum <= 30;
   }
 
   //methods

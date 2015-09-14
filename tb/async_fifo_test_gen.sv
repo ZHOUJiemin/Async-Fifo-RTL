@@ -29,7 +29,7 @@ class Generator;
      rd_remain = 0;
   endfunction
 
-  virtual task void run();
+  virtual task run();
     wr_remain = cfg.totaldatanum;  //data need to be written
     rd_remain = cfg.totaldatanum;  //data need to be read
     while(wr_remain || rd_remain)  //when there is still data to transfer
