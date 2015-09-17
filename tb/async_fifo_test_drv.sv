@@ -6,13 +6,13 @@ class Driver;
   vfifo_if_drv fifo_if;
   //mailboxes and queue
   mailbox #(Tranx) gen2drv; //gen2drv
-  data drv2scb[$];
+  data_t drv2scb[$];
 
   //transaction
   Tranx tranx;
   int interval;
   int dataintranx;          //data number in one transaction
-  data write_data[];         //dynamic array, allocate memory for it before using it
+  data_t write_data[];         //dynamic array, allocate memory for it before using it
 
   //other variables
   int remain;
@@ -20,14 +20,14 @@ class Driver;
 
   function new(vfifo_if_drv fifo_if,
                mailbox #(Tranx) gen2drv,
-               data drv2scb[$]);
+               data_t drv2scb[$]);
     this.fifo_if = fifo_if;
     this.gen2drv = gen2drv;
     this.drv2scb = drv2scb;
     wr_success = 0;
   endfunction
 
-  virtual task send(input int interval, input data write_data[]);
+  virtual task send(input int interval, input data_t write_data[]);
     repeat(interval)  //wait for several cycles before transfer
       @(fifo_if.wrcb);
     foreach(write_data[i])

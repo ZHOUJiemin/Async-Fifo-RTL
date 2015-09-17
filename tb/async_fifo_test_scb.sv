@@ -6,16 +6,16 @@ class Scoreboard;
 Config cfg;
 
 //mailboxes and queues
-mailbox #(data) mon2scb;
-data drv2scb[$];
+mailbox #(data_t) mon2scb;
+data_t drv2scb[$];
 
 //other variables
-data read_data;
-data write_data;
+data_t read_data;
+data_t write_data;
 int total;
 
 //methods
-function new(data drv2scb[$], mailbox #(data) mon2scb, Config cfg);
+function new(data_t drv2scb[$], mailbox #(data_t) mon2scb, Config cfg);
   this.drv2scb = drv2scb;
   this.mon2scb = mon2scb;
   this.cfg = cfg;

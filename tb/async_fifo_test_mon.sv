@@ -7,13 +7,13 @@ class Monitor;
 
   //mailboxes and queues
   mailbox #(Tranx) gen2mon;
-  mailbox #(data) mon2scb;
+  mailbox #(data_t) mon2scb;
 
   //transactions
   Tranx tranx;
   int interval;
   int dataintranx;
-  data read_data[];
+  data_t read_data[];
 
   //other variables
   int remain;
@@ -22,14 +22,14 @@ class Monitor;
   //methods
   function new(vfifo_if_mon fifo_if,
                mailbox #(Tranx) gen2mon,
-               mailbox #(Tranx) mon2scb);
+               mailbox #(data_t) mon2scb);  //fixed a bug on 0917
     this.fifo_if = fifo_if;
     this.gen2mon = gen2mon;
     this.mon2scb = mon2scb;
     rd_success = 0;
   endfunction
 
-  virtual task receive(input int interval, output data read_data[]);
+  virtual task receive(input int interval, output data_t read_data[]);
     repeat(interval)
       @(fifo_if.rdcb);
     foreach(read_data[i])
@@ -66,7 +66,7 @@ class Monitor;
       read_data = new[dataintranx];   //allocate memory
       receive(interval, read_data);   //receive data
       foreach(read_data[i])
-        mon2scb.push(read_data[i]);   //send data to scoreboard
+        mon2scb.put(read_data[i]);   //send data to scoreboard
     end while(tranx.remain > tranx.datanum);
   endtask
 
