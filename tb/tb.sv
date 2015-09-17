@@ -30,13 +30,11 @@ bit rclk;
 
 //instantiation
 //interface
-async_fifo_if #(.DWIDTH(DWIDTH)) fifo_if_drv (
-    .wclk(wclk),
-    .rclk(rclk)
+async_fifo_wr_if fifo_if_drv (
+    .wclk(wclk)
   );
 
-async_fifo_if #(.DWIDTH(DWIDTH)) fifo_if_mon (
-    .wclk(wclk),
+async_fifo_rd_if fifo_if_mon (
     .rclk(rclk)
   );
 

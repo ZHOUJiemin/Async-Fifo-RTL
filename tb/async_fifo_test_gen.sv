@@ -42,7 +42,7 @@ class Generator;
         else
         begin
           $display("@time %4t  A New Write Transaction Has Been Generated", $time);
-          gen2drv.push(wrtranx);            //send this Tranx to wrdrv
+          gen2drv.put(wrtranx);            //send this Tranx to wrdrv
           wr_remain =- wrtranx.datanum;       //calculate the remaining data number
         end
       end:wr_tranx_gen
@@ -55,7 +55,7 @@ class Generator;
         else
         begin
           $display("@time %4t  A New Read Transaction Has Been Generated", $time);
-          gen2mon.push(rdtranx);            //send this Tranx to rddrv
+          gen2mon.put(rdtranx);            //send this Tranx to rddrv
           rd_remain =- rdtranx.datanum;       //calculate the remaining data number
         end
       end:rd_tranx_gen

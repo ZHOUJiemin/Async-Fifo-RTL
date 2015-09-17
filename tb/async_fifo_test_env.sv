@@ -3,11 +3,11 @@
 //---------------------------------------------------------
 //modifications
 //@0911 wrdrv changed to drv, rddrv changed to mon
+//@0917 typedef changed, use new interfaces
 //---------------------------------------------------------
-typedef virtual async_fifo_if vfifo_if;
-typedef virtual async_fifo_if.drv_mp vfifo_if_drv;
-typedef virtual async_fifo_if.mon_mp vfifo_if_mon;
-typedef logic [7:0] data;
+typedef virtual async_fifo_wr_if vfifo_if_drv;  //modified by jiemin on 0917
+typedef virtual async_fifo_rd_if vfifo_if_mon;  //modified by jiemin on 0917
+typedef logic [7:0] data_t;                     //modified by jiemin on 0917, make it more readable
 
 //include files
 `include "async_fifo_test_tranx.sv"
@@ -29,20 +29,24 @@ class Environment;
   //mailboxes and queues
   mailbox #(Tranx) gen2drv;  //a mailbox used to issue a write transaction
   mailbox #(Tranx) gen2mon;  //a mailbox used to issue a read transaction
-  mailbox #(data) mon2scb;   //a mailbox used to send the read data to the scoreboard
-  data drv2scb[$]; //a queue used to send the write data to the scoreboard
+  mailbox #(data_t) mon2scb;   //a mailbox used to send the read data to the scoreboard
+  data_t drv2scb[$]; //a queue used to send the write data to the scoreboard
 
   //configuration
   Config cfg;
 
   //virtual interfaces
   vfifo_if_drv fifo_if_drv;   //modified on 0914
-  vfifo_if_mon fifo_if_mon;
+  vfifo_if_mon fifo_if_mon;   //modified on 0914
+
+  //other variables
+  /*int dwidth;*/
 
   //constructor
   function new(vfifo_if_drv fifo_if_drv, vfifo_if_mon fifo_if_mon); //modified on 0914
     this.fifo_if_drv = fifo_if_drv;
     this.fifo_if_mon = fifo_if_mon;
+    /*this.dwidth = dwidth;*/
   endfunction
 
   //methods
@@ -57,10 +61,10 @@ function void Environment::gen_cfg();
   //generate configuration
   cfg = new();
   if(!cfg.randomize())
-    $display("@time %4t  Configuration Randomization Has Failed");
+    $display("@time %4t  Configuration Randomization Has Failed", $time);
   else
   begin
-    $display("@time %4t  Configuration Randomization Done");
+    $display("@time %4t  Configuration Randomization Done", $time);
     cfg.display();
   end
 endfunction
@@ -89,7 +93,7 @@ endtask
 
 function void Environment::wrap_up();
   //don't know exactly what to do here
-  $display("@time %4t  Test Wrapping Up");
+  $display("@time %4t  Test Wrapping Up", $time);
   //display the result from the scoreboard
   $display("Good Count = %0d  <-->  Bad Count = %0d", cfg.good_count, cfg.bad_count);
 endfunction
