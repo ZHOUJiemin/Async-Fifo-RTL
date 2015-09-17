@@ -22,7 +22,7 @@ class Monitor;
   //methods
   function new(vfifo_if_mon fifo_if,
                mailbox #(Tranx) gen2mon,
-               mailbox #(Tranx) mon2scb);
+               mailbox #(data_t) mon2scb);  //fixed a bug on 0917
     this.fifo_if = fifo_if;
     this.gen2mon = gen2mon;
     this.mon2scb = mon2scb;
