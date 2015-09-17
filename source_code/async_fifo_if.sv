@@ -1,12 +1,13 @@
 //created by jiemin on 20150910
 //asynchronous fifo -- interface
-interface async_fifo_if#(parameter DWIDTH = 8)(input bit wclk, rclk);
+
+//big change on 0917, build two interfaces rather than one
+//write interface, put reset_L signal here
+//to make this case as simple as it can be, stop using a parameterized interface, instead restrict the bus width to 8bit
+interface async_fifo_wr_if(input bit wclk);
   logic push;
-  logic [DWIDTH-1:0] wdata;
+  logic [7:0] wdata;
   logic full;
-  logic pop;
-  logic [DWIDTH-1:0] rdata;
-  logic empty;
   bit reset_L;
 
 clocking wrcb @(posedge wclk);
@@ -14,14 +15,24 @@ clocking wrcb @(posedge wclk);
   output wdata;
   input full;
 endclocking
+modport drv_mp(clocking wrcb, output reset_L);   //modified on 0914
+endinterface
+
+interface async_fifo_rd_if(input bit rclk);
+  logic pop;
+  logic [7:0] rdata;
+  logic empty;
 
 clocking rdcb @(posedge rclk);
   output pop;
   input rdata;
   input empty;
 endclocking
+modport mon_mp(clocking rdcb);   //change rddrv to mon
+endinterface
 
-modport dut(input push,             //added on 0914
+//removed by jiemin on 0917
+/*modport dut(input push,             //added on 0914
             input wdata,
             output full,
             input pop,
@@ -35,9 +46,4 @@ modport test(output push,           //added on 0914
              output pop,
              input rdata,
              input empty,
-             output reset_L);
-
-modport drv_mp(clocking wrcb);   //modified on 0914
-modport mon_mp(clocking rdcb);   //change rddrv to mon
-
-endinterface
+             output reset_L);*/

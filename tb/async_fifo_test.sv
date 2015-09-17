@@ -4,8 +4,8 @@
 program automatic async_fifo_test #(parameter DEPTH = 16,
                                     parameter PTRWIDTH = 4,
                                     parameter DWIDTH = 8)
-                                   (async_fifo_if fifo_if_drv,
-                                    async_fifo_if fifo_if_mon);
+                                   (async_fifo_wr_if fifo_if_drv,
+                                    async_fifo_rd_if fifo_if_mon);
 //include files
 `include "async_fifo_test_env.sv"
 
