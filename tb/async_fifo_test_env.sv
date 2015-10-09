@@ -5,8 +5,8 @@
 //@0911 wrdrv changed to drv, rddrv changed to mon
 //@0917 typedef changed, use new interfaces
 //---------------------------------------------------------
-typedef virtual async_fifo_wr_if vfifo_if_drv;  //modified by jiemin on 0917
-typedef virtual async_fifo_rd_if vfifo_if_mon;  //modified by jiemin on 0917
+typedef virtual async_fifo_wr_if.TEST vfifo_if_wr;  //modified by jiemin on 0917
+typedef virtual async_fifo_rd_if.TEST vfifo_if_rd;  //modified by jiemin on 0917
 typedef logic [7:0] data_t;                     //modified by jiemin on 0917, make it more readable
 
 //include files
@@ -36,16 +36,16 @@ class Environment;
   Config cfg;
 
   //virtual interfaces
-  vfifo_if_drv fifo_if_drv;   //modified on 0914
-  vfifo_if_mon fifo_if_mon;   //modified on 0914
+  vfifo_if_wr fifo_if_wr;   //modified on 0914
+  vfifo_if_rd fifo_if_rd;   //modified on 0914
 
   //other variables
   /*int dwidth;*/
 
   //constructor
-  function new(vfifo_if_drv fifo_if_drv, vfifo_if_mon fifo_if_mon); //modified on 0914
-    this.fifo_if_drv = fifo_if_drv;
-    this.fifo_if_mon = fifo_if_mon;
+  function new(vfifo_if_wr fifo_if_wr, vfifo_if_rd fifo_if_rd); //modified on 0914
+    this.fifo_if_wr = fifo_if_wr;
+    this.fifo_if_rd = fifo_if_rd;
     /*this.dwidth = dwidth;*/
   endfunction
 
@@ -76,8 +76,8 @@ function void Environment::build();
   mon2scb = new();
   //build up the transactors here
   gen = new(gen2drv, gen2mon, cfg);
-  drv = new(fifo_if_drv, gen2drv, drv2scb); //pass interface by using modports
-  mon = new(fifo_if_mon, gen2mon, mon2scb); //pass interface by using modports
+  drv = new(fifo_if_wr, gen2drv, drv2scb); //pass interface by using modports
+  mon = new(fifo_if_rd, gen2mon, mon2scb); //pass interface by using modports
   scb = new(drv2scb, mon2scb, cfg); //the scoreboard need to know how many data are transferred
 endfunction
 

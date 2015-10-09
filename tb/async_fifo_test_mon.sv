@@ -3,7 +3,7 @@
 class Monitor;
   //properties
   //interface
-  vfifo_if_mon fifo_if;
+  vfifo_if_rd fifo_if;
 
   //mailboxes and queues
   mailbox #(Tranx) gen2mon;
@@ -20,7 +20,7 @@ class Monitor;
   int rd_success;
 
   //methods
-  function new(vfifo_if_mon fifo_if,
+  function new(vfifo_if_rd fifo_if,
                mailbox #(Tranx) gen2mon,
                mailbox #(data_t) mon2scb);  //fixed a bug on 0917
     this.fifo_if = fifo_if;

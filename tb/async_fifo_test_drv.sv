@@ -3,7 +3,7 @@
 class Driver;
   //properties
   //virtual interface
-  vfifo_if_drv fifo_if;
+  vfifo_if_wr fifo_if;
   //mailboxes and queue
   mailbox #(Tranx) gen2drv; //gen2drv
   data_t drv2scb[$];
@@ -18,7 +18,7 @@ class Driver;
   int remain;
   int wr_success;
 
-  function new(vfifo_if_drv fifo_if,
+  function new(vfifo_if_wr fifo_if,
                mailbox #(Tranx) gen2drv,
                data_t drv2scb[$]);
     this.fifo_if = fifo_if;
