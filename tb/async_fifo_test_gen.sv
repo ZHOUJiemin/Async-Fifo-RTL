@@ -30,11 +30,14 @@ class Generator;
   endfunction
 
   virtual task run();
+    $display ("@%4t  Running Transactor: Generator", $time);
     wr_remain = cfg.totaldatanum;  //data need to be written
     rd_remain = cfg.totaldatanum;  //data need to be read
-    while(wr_remain || rd_remain)  //when there is still data to transfer
+    $display ("@%4t  %d Data to Write, %d Data to Read", $time, wr_remain, rd_remain);
+    while(wr_remain>0 || rd_remain>0)  //when there is still data to transfer
     fork                           //start wrdrv and rddrv at the same time
       //generate a write transaction
+      if(wr_remain > 0)
       begin:wr_tranx_gen
         wrtranx = new(wr_remain);      //limit the number of the data in one transaction
         if(!wrtranx.randomize())
@@ -42,12 +45,14 @@ class Generator;
         else
         begin
           $display("@time %4t  A New Write Transaction Has Been Generated", $time);
+          wrtranx.display;
           gen2drv.put(wrtranx);            //send this Tranx to wrdrv
           wr_remain =- wrtranx.datanum;       //calculate the remaining data number
         end
       end:wr_tranx_gen
 
       //generate a read transaction
+      if(rd_remain>0)
       begin:rd_tranx_gen
         rdtranx = new(rd_remain);
         if(!rdtranx.randomize())
@@ -55,11 +60,13 @@ class Generator;
         else
         begin
           $display("@time %4t  A New Read Transaction Has Been Generated", $time);
+          rdtranx.display;
           gen2mon.put(rdtranx);            //send this Tranx to rddrv
           rd_remain =- rdtranx.datanum;       //calculate the remaining data number
         end
       end:rd_tranx_gen
     join_none
+    #0
     wait fork;  //wait until all threads to finish
   endtask
 

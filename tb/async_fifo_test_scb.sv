@@ -23,6 +23,7 @@ function new(data_t drv2scb[$], mailbox #(data_t) mon2scb, Config cfg);
 endfunction
 
 virtual task run();
+  $display ("@%4t  Running Transactor: Scoreboard", $time);
   while (total < cfg.totaldatanum)
   begin
     mon2scb.get(read_data);         //wait until there is a read_data

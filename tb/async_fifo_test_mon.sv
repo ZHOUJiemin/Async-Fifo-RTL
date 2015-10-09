@@ -59,6 +59,7 @@ class Monitor;
   endtask
 
   virtual task run();
+    $display ("@%4t  Running Transactor: Monitor", $time);
     do begin
       gen2mon.get(tranx);             //get transaction information
       interval = tranx.interval;

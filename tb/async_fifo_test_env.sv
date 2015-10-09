@@ -79,15 +79,16 @@ function void Environment::build();
   drv = new(fifo_if_wr, gen2drv, drv2scb); //pass interface by using modports
   mon = new(fifo_if_rd, gen2mon, mon2scb); //pass interface by using modports
   scb = new(drv2scb, mon2scb, cfg); //the scoreboard need to know how many data are transferred
+  $display("@time %4t  Environment Built Successfully", $time);
 endfunction
 
 task Environment::run();
   //get things working here
   fork
     gen.run();
-    drv.run();
-    mon.run();
-    scb.run();
+//    drv.run();
+//    mon.run();
+//    scb.run();
   join
 endtask
 

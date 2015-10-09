@@ -57,6 +57,7 @@ class Driver;
   endtask
 
   virtual task run();
+    $display ("@%4t  Running Transactor: Driver", $time);
     do begin
     gen2drv.get(tranx);             //get the transaction from the mailbox
     interval = tranx.interval;      //get interval
