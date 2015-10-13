@@ -86,9 +86,9 @@ task Environment::run();
   //get things working here
   fork
     gen.run();
-//    drv.run();
-//    mon.run();
-//    scb.run();
+    drv.run();
+    mon.run();
+    scb.run();
   join
 endtask
 

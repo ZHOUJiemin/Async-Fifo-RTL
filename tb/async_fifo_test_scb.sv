@@ -15,7 +15,7 @@ data_t write_data;
 int total;
 
 //methods
-function new(data_t drv2scb[$], mailbox #(data_t) mon2scb, Config cfg);
+function new(ref data_t drv2scb[$], input mailbox #(data_t) mon2scb, Config cfg);
   this.drv2scb = drv2scb;
   this.mon2scb = mon2scb;
   this.cfg = cfg;
@@ -27,6 +27,8 @@ virtual task run();
   while (total < cfg.totaldatanum)
   begin
     mon2scb.get(read_data);         //wait until there is a read_data
+    while(!drv2scb.size())
+      wait(100ns);
     write_data = drv2scb.pop_front();  //get the write data
     if(read_data == write_data)
     begin

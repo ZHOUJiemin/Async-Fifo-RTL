@@ -20,7 +20,7 @@ class Config;
   endfunction
 
   virtual function void display();
-    $display("@%4t  %0d data to be transferred by using the asynchronous FIFO",$time, totaldatanum);
+    $display("@time %4t  %0d data to be transferred by using the asynchronous FIFO",$time, totaldatanum);
   endfunction
 
 endclass

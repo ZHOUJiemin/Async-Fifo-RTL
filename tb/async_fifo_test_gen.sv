@@ -30,14 +30,16 @@ class Generator;
   endfunction
 
   virtual task run();
-    $display ("@%4t  Running Transactor: Generator", $time);
+    int write_done = 0;          //variables act as
+    int read_done = 0;           //flags for write complete & read complete
+    $display ("@time %4t  Running Transactor: Generator", $time);
     wr_remain = cfg.totaldatanum;  //data need to be written
     rd_remain = cfg.totaldatanum;  //data need to be read
-    $display ("@%4t  %d Data to Write, %d Data to Read", $time, wr_remain, rd_remain);
-    while(wr_remain>0 || rd_remain>0)  //when there is still data to transfer
+    $display ("@time %4t  %0d Data to Write, %0d Data to Read", $time, wr_remain, rd_remain);
+
     fork                           //start wrdrv and rddrv at the same time
       //generate a write transaction
-      if(wr_remain > 0)
+      while(!write_done)             //if there is still data to write
       begin:wr_tranx_gen
         wrtranx = new(wr_remain);      //limit the number of the data in one transaction
         if(!wrtranx.randomize())
@@ -47,12 +49,16 @@ class Generator;
           $display("@time %4t  A New Write Transaction Has Been Generated", $time);
           wrtranx.display;
           gen2drv.put(wrtranx);            //send this Tranx to wrdrv
-          wr_remain =- wrtranx.datanum;       //calculate the remaining data number
+          wr_remain = wr_remain - wrtranx.datanum;       //calculate the remaining data number
+          $display("@time %4t  Write Remaining %0d", $time, wr_remain);
+          if(wr_remain == 0)
+            write_done = 1;
+//          break;
         end
       end:wr_tranx_gen
 
       //generate a read transaction
-      if(rd_remain>0)
+      while(!read_done)
       begin:rd_tranx_gen
         rdtranx = new(rd_remain);
         if(!rdtranx.randomize())
@@ -62,11 +68,14 @@ class Generator;
           $display("@time %4t  A New Read Transaction Has Been Generated", $time);
           rdtranx.display;
           gen2mon.put(rdtranx);            //send this Tranx to rddrv
-          rd_remain =- rdtranx.datanum;       //calculate the remaining data number
+          rd_remain = rd_remain - rdtranx.datanum;       //calculate the remaining data number
+          $display("@time %4t  Read Remaining %0d", $time, rd_remain);
+          if(rd_remain == 0)
+            read_done = 1;
+//            break;
         end
       end:rd_tranx_gen
     join_none
-    #0
     wait fork;  //wait until all threads to finish
   endtask
 
