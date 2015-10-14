@@ -6,7 +6,7 @@ class Driver;
   vfifo_if_wr fifo_if;
   //mailboxes and queue
   mailbox #(Tranx) gen2drv; //gen2drv
-  data_t drv2scb[$];
+  mailbox #(data_t) drv2scb;
 
   //transaction
   Tranx tranx;
@@ -21,7 +21,7 @@ class Driver;
 
   function new(vfifo_if_wr fifo_if,
                mailbox #(Tranx) gen2drv,
-               ref data_t drv2scb[$]);
+               mailbox #(data_t) drv2scb);
     this.fifo_if = fifo_if;
     this.gen2drv = gen2drv;
     this.drv2scb = drv2scb;
@@ -65,18 +65,18 @@ class Driver;
     do begin
     gen2drv.get(tranx);             //get the transaction from the mailbox
     $display("WR_TRANX_ID %0d", tranxid++ );
-    tranx.display;
+//    tranx.display;
     interval = tranx.interval;      //get interval
     dataintranx = tranx.datanum;    //get number of data
     write_data = new [dataintranx];  //allocate memory
     foreach(write_data[i])           //randomize data
     begin
       write_data[i] = $urandom_range(0,255);
-      drv2scb.push_back(write_data[i]);   //send the data to scoreboard
+      drv2scb.put(write_data[i]);   //send the data to scoreboard
     end
     send(interval, write_data);
-    $display("@time %4t  Write Transaction: Pushed %0d Data In", $time, dataintranx);
-    end while(tranx.remain >= tranx.datanum); //if there are still data to send
+    $display("@time %4t  Write Transaction: Pushed %0d Data Out", $time, dataintranx);
+    end while(tranx.remain > tranx.datanum); //if there are still data to send
   endtask
 
 endclass

@@ -30,7 +30,7 @@ class Environment;
   mailbox #(Tranx) gen2drv;  //a mailbox used to issue a write transaction
   mailbox #(Tranx) gen2mon;  //a mailbox used to issue a read transaction
   mailbox #(data_t) mon2scb;   //a mailbox used to send the read data to the scoreboard
-  data_t drv2scb[$]; //a queue used to send the write data to the scoreboard
+  mailbox #(data_t) drv2scb; //a queue used to send the write data to the scoreboard
 
   //configuration
   Config cfg;
@@ -74,6 +74,8 @@ function void Environment::build();
   gen2drv = new();
   gen2mon = new();
   mon2scb = new();
+  drv2scb = new();
+
   //build up the transactors here
   gen = new(gen2drv, gen2mon, cfg);
   drv = new(fifo_if_wr, gen2drv, drv2scb); //pass interface by using modports
@@ -96,5 +98,10 @@ function void Environment::wrap_up();
   //don't know exactly what to do here
   $display("@time %4t  Test Wrapping Up", $time);
   //display the result from the scoreboard
+  $display("Total Data Number = %0d", cfg.totaldatanum);
   $display("Good Count = %0d  <-->  Bad Count = %0d", cfg.good_count, cfg.bad_count);
+  if(cfg.good_count == cfg.totaldatanum)
+    $display("All Good! TEST CLEAR");
+  else
+    $display("Bad Data Detected! TEST FAILED");
 endfunction

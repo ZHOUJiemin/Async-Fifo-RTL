@@ -3,7 +3,7 @@
 
 //time unit and time precision
 timeunit 1ns;
-timeprecision 1ps;
+timeprecision 1ns;
 
 //include files
 `include "async_fifo_top.v"

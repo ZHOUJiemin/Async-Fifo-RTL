@@ -11,6 +11,7 @@ class Config;
   constraint total_data_num{
     totaldatanum >= 0;
     totaldatanum <= 30;
+//    totaldatanum == 1;  //first test, debug
   }
 
   //methods
