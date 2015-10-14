@@ -23,6 +23,6 @@ class Tranx;
   endfunction
 
   function void display();
-    $display("After %0d cycles, Will Transfer %0d Data", interval, datanum);
+    $display("@time %4t  After %0d cycles, Will Transfer %0d Data",$time, interval, datanum);
   endfunction
 endclass
