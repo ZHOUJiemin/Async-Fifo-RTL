@@ -15,7 +15,7 @@ clocking wrcb @(posedge wclk);
   output wdata;
   input full;
 endclocking
-modport drv_mp(clocking wrcb, output reset_L);   //modified on 0914
+modport TEST(clocking wrcb, output reset_L);   //modified on 1009
 endinterface
 
 interface async_fifo_rd_if(input bit rclk);
@@ -28,7 +28,7 @@ clocking rdcb @(posedge rclk);
   input rdata;
   input empty;
 endclocking
-modport mon_mp(clocking rdcb);   //change rddrv to mon
+modport TEST(clocking rdcb);   //modified on 1009
 endinterface
 
 //removed by jiemin on 0917
