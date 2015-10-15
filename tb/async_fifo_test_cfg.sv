@@ -11,6 +11,7 @@ class Config;
   constraint total_data_num{
     totaldatanum >= 0;
     totaldatanum <= 30;
+//    totaldatanum == 1;  //first test, debug
   }
 
   //methods
@@ -20,7 +21,7 @@ class Config;
   endfunction
 
   virtual function void display();
-    $display("%0d data to be transferred by using the asynchronous FIFO", totaldatanum);
+    $display("@time %4t  %0d data to be transferred by using the asynchronous FIFO",$time, totaldatanum);
   endfunction
 
 endclass
