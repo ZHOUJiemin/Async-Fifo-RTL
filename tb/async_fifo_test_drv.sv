@@ -28,43 +28,53 @@ class Driver;
   endfunction
 
   virtual task send(input int interval, ref data_t write_data[]);
-    int wr_success;
-    wr_success = 0;   //assign value to automatic variables;
+    event wr_cmd_issued;
+    event wr_data_sentone;
+    event wr_data_sentall;
+
     repeat(interval)  //wait for several cycles before transfer
       @(fifo_if.wrcb);
       //  $display("@time %4t  Write Idle Cycle", $time);
-    for(int i =0; i<= write_data.size(); i++)  //not good!
+    fork//start two threads
+    //thread1 issue a new transaction for specified times
     begin
-      @(fifo_if.wrcb)
+      for(int i =0; i< write_data.size(); i++)
       begin
-        //if last transaction is successful, display it
-        if(wr_success)
-        begin
-          wr_success = 0;
-          $display("@time %4t  Data is Pushed In, Data = 0x%2x", $time, write_data[i-1]);
-        end
-        //do this transaction
-        //if full flag is asserted
-        if(i < write_data.size())
-        begin:current_transaction
-          while(fifo_if.wrcb.full)
-          begin
-            //fifo_if.wrcb.push <= 1'b 0;
-            wr_success = 0;
-            $display("@time %4t  FIFO is Full, Failed to Issue a Push Command", $time);
-            $display("@time %4t  Wait for 1 WrClk Cycle", $time);
-            @(fifo_if.wrcb);
-          end
-          fifo_if.wrcb.push <= 1'b 1;
-          fifo_if.wrcb.wdata <= write_data[i];
-          wr_success = 1;
-          $display("@time %4t  Issued a Push Command", $time);
-        end:current_transaction
+        fifo_if.wrcb.push <= 1'b 1;
+        fifo_if.wrcb.wdata <= write_data[i];
+        $display("@time %4t  Assert Push Signal", $time);
+        -> wr_cmd_issued;
+        @(fifo_if.wrcb);
+        wait(wr_data_sentone.triggered);
       end
+      //stop transaction
+      wait(wr_data_sentall.triggered);
+      fifo_if.wrcb.push <= 1'b 0;
+      fifo_if.wrcb.wdata <= '0;
     end
-    //stop transaction
-    fifo_if.wrcb.push <= 1'b 0;
-    fifo_if.wrcb.wdata <= '0;
+
+    //thread2 detects whether the last transaction is successful
+    //if it is, display it; if it is not, wait
+    begin
+      for(int i =0; i< write_data.size(); i++)
+      begin
+        wait(wr_cmd_issued.triggered);
+        @(fifo_if.wrcb);
+        //if full flag is asserted, keep looping
+        while(fifo_if.wrcb.full)
+        begin
+          //fifo_if.wrcb.push <= 1'b 0;
+          $display("@time %4t  FIFO is Full, Push Command is Invalid", $time);
+          $display("@time %4t  Wait for 1 WrClk Cycle", $time);
+          @(fifo_if.wrcb);
+        end
+        $display("@time %4t  Data Pushed In, Data = 0x%2x", $time, write_data[i]);
+        -> wr_data_sentone;
+      end
+      -> wr_data_sentall;
+    end
+
+    join
   endtask
 
   virtual task run();
