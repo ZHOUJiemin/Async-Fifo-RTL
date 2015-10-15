@@ -29,43 +29,58 @@ class Monitor;
   endfunction
 
   virtual task receive(input int interval, ref data_t read_data[]);
-    int rd_success;
-    rd_success = 0;
+    event rd_cmd_issued;
+    event rd_data_getone;
+    event rd_data_getall;
+
     repeat(interval)
       @(fifo_if.rdcb);
-      //  $display("@time %4t  Read Idle Cycle", $time);
-    for(int i =0; i<= read_data.size(); i++)  //not good!
+      //$display("@time %4t  Read Idle Cycle", $time);
+
+    fork//start three threads
+    //thread1 issue a new transaction for specified times
     begin
-      @(fifo_if.rdcb)
+      for(int i = 0; i< read_data.size(); i++)
       begin
-        //if last transaction is successful, display it
-        //quite tedious, not good! not good!
-        if(rd_success)
-        begin
-          rd_success = 0;
-          read_data[i-1] = fifo_if.rdcb.rdata;   //store read data in the array
-          $display("@time %4t  Data Popped Out, Data = 0x%02x", $time, read_data[i-1]);
-        end
-        //do this transaction
-        //if empty flag is asserted
-        if(i < read_data.size()) //not good!
-        begin:current_transaction
-          while(fifo_if.rdcb.empty)
-          begin
-            //fifo_if.rdcb.pop <= 1'b 0;
-            rd_success = 0;
-            $display("@time %4t  FIFO is Empty, Failed to Issue a Pop Command", $time);
-            $display("@time %4t  Wait for 1 RdClk Cycle", $time);
-            @(fifo_if.rdcb);
-          end
-          fifo_if.rdcb.pop <= 1'b 1;
-          rd_success = 1;
-          $display("@time %4t  Issued a Pop Command", $time);
-        end:current_transaction
+        fifo_if.rdcb.pop <= 1'b 1;
+        $display("@time %4t  Assert Pop Signal", $time);
+        -> rd_cmd_issued;
+        @(fifo_if.rdcb);
+        wait(rd_data_getone.triggered);
       end
+      //stop transaction
+      wait(rd_data_getall.triggered);
+      fifo_if.rdcb.pop <= 1'b 0;
     end
-    //stop transaction
-    fifo_if.rdcb.pop <= 1'b 0;
+
+    //thread2 detects whether the last transaction is successful
+    begin
+      for(int i = 0; i< read_data.size(); i++)
+      begin
+        wait(rd_cmd_issued.triggered);
+        @(fifo_if.rdcb);
+        //if empty flag is asserted, keep looping
+        while(fifo_if.rdcb.empty)
+        begin
+          $display("@time %4t  FIFO is Empty, Pop Command is Invalid", $time);
+          $display("@time %4t  Wait for 1 RdClk Cycle", $time);
+          @(fifo_if.rdcb);
+        end
+        -> rd_data_getone;
+      end
+      -> rd_data_getall;
+    end
+
+    //thread3 detects whether the last read data is acquired, if it is, display it
+    for(int i = 0; i< read_data.size(); i++)
+    begin
+      wait(rd_data_getone.triggered);
+      @(fifo_if.rdcb);
+      read_data[i] = fifo_if.rdcb.rdata;   //store read data in the array
+      $display("@time %4t  Data Popped Out, Data = 0x%02x", $time, read_data[i]);
+    end
+
+    join
   endtask
 
   virtual task run();
