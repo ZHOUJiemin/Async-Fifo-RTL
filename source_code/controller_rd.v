@@ -46,6 +46,7 @@ always@(posedge rclk or negedge reset_L)
     wrptr_gray_ff2 <= wrptr_gray_ff1;
   end
 
+
 //signal:empty
 always@(*)
   if(reset_L == 0)  //if reset is asserted
