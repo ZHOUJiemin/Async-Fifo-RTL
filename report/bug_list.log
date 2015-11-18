@@ -24,3 +24,13 @@ Date: 20150909
 File: controller_wr.v
 Description: fixed a bug and solved the "always full" problem
 Modification: fixed the if statement that generates the full flag
+
+Date: 20151014
+File: async_fifo_top.v
+Description: read pointer is not correct! even when empty flag is asserted, it takes out one more value!
+modification: synchronize write data with wrptr/ read data with read ptr
+
+Date: 20151015
+File: async_fifo_top.v
+Description: data is read from/written to wrong address!(eg. -16, -15)
+modification: slice wrptr and rdptr to have the correct value

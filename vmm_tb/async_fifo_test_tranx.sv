@@ -22,4 +22,7 @@ class Tranx;
     this.remain = remain;
   endfunction
 
+  function void display();
+    $display("@time %4t  After %0d cycles, Will Transfer %0d Data",$time, interval, datanum);
+  endfunction
 endclass

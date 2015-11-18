@@ -1,9 +1,10 @@
 //created by jiemin on 20150909
 //asynchronous fifo -- systemverilog testbench
+//top file
 
 //time unit and time precision
 timeunit 1ns;
-timeprecision 1ps;
+timeprecision 1ns;
 
 //include files
 `include "async_fifo_top.v"
@@ -30,31 +31,31 @@ bit rclk;
 
 //instantiation
 //interface
-async_fifo_wr_if fifo_if_drv (
+async_fifo_wr_if fifo_if_wr (
     .wclk(wclk)
   );
 
-async_fifo_rd_if fifo_if_mon (
+async_fifo_rd_if fifo_if_rd (
     .rclk(rclk)
   );
 
 //dut
 async_fifo_top #(DEPTH, PTRWIDTH, DWIDTH) fifo (
-    .wclk(fifo_if_drv.wclk),
-    .push(fifo_if_drv.push),
-    .wdata(fifo_if_drv.wdata),
-    .full(fifo_if_drv.full),
-    .rclk(fifo_if_mon.rclk),
-    .pop(fifo_if_mon.pop),
-    .rdata(fifo_if_mon.rdata),
-    .empty(fifo_if_mon.empty),
-    .reset_L(fifo_if_drv.reset_L)
+    .wclk(fifo_if_wr.wclk),
+    .push(fifo_if_wr.push),
+    .wdata(fifo_if_wr.wdata),
+    .full(fifo_if_wr.full),
+    .rclk(fifo_if_rd.rclk),
+    .pop(fifo_if_rd.pop),
+    .rdata(fifo_if_rd.rdata),
+    .empty(fifo_if_rd.empty),
+    .reset_L(fifo_if_wr.reset_L)
   );
 
 //test program
 async_fifo_test #(DEPTH, PTRWIDTH, DWIDTH) test(
-    .fifo_if_drv(fifo_if_drv),
-    .fifo_if_mon(fifo_if_mon)
+    .fifo_if_wr(fifo_if_wr),
+    .fifo_if_rd(fifo_if_rd)
   );
 
 //clock generator

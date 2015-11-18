@@ -1,5 +1,8 @@
 //created by jiemin on 20150908
 //asynchronous fifo -- top module
+//modified by jiemin on 20151015
+//synchronize write data with wrptr/ read data with rdptr
+
 `include "controller_wr.v"
 `include "controller_rd.v"
 
@@ -70,16 +73,16 @@ end
 endfunction
 
 //process
-  always@(*)
+  always@(posedge wclk) //modified by jiemin on 20151015
   begin
     if(push && !full) //ok to write
-      mem[wrptr_bin] = wdata;
+      mem[wrptr_bin[PTRWIDTH-1:0]] = wdata;
   end
 
-  always@(*)
+  always@(posedge rclk) //modified by jiemin on 20151015
   begin
     if(pop && !empty) //ok to read
-      rdata = mem[rdptr_bin];
+      rdata = mem[rdptr_bin[PTRWIDTH-1:0]];
   end
 
 endmodule
