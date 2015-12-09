@@ -89,7 +89,7 @@ class trans_driver extends uvm_driver #(trans);
       @ vif.rdcb;
     vif.rdcb.pop <= 1'b 1;
     //wait until empty flag is deasserted
-    while(vrif.rdcb.empty)
+    while(vif.rdcb.empty)
       @ vif.rdcb;
     //if not empty, transaction will be done at the current cycle
     //then it is OK to deassert the pop signal

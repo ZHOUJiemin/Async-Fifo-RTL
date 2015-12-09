@@ -59,13 +59,13 @@ module uvm_tb_top;
   async_fifo_top #(.DEPTH(DEPTH),
                    .PTRWIDTH(PTRWIDTH),
                    .DWIDTH(DWIDTH))
-              dut(.wclk(intf.wclk),
+              dut(.wclk(intf.wrclk),
                   .push(intf.push),
-                  .wdata(intf.wdata),
+                  .wdata(intf.wrdata),
                   .full(intf.full),
-                  .rclk(intf.rclk),
+                  .rclk(intf.rdclk),
                   .pop(intf.pop),
-                  .rdata(intf.rdata),
+                  .rdata(intf.rddata),
                   .empty(intf.empty),
                   .reset_L(intf.reset_L));
 
