@@ -4,6 +4,7 @@
 //by using uvm
 //Date          Author        Description
 //2015/11/18    ZHOU Jiemin   First created
+//2015/12/22    ZHOU Jiemin   Stopped using clocking blocks (uvm)
 
 //source code starts here---------------------------------------------
 
@@ -21,23 +22,31 @@ interface async_fifo_if #(parameter DWIDTH = 8)
   logic [DWIDTH-1:0] rddata;
 
   //write clocking block
-  clocking wrcb @(posedge wrclk);
+  //comment out, can't be used in uvm testbench
+  /*clocking wrcb @(posedge wrclk);
     output push;
     input full;
     output wrdata;
-  endclocking
+  endclocking*/
 
   //write modport for testbench
-  modport wrmp (clocking wrcb);
+  modport wrmp (input wrclk,
+                output push,
+                input full,
+                output wrdata);
 
   //read clocking block
-  clocking rdcb @(posedge rdclk);
+  //comment out, can't be used in uvm testbench
+  /*clocking rdcb @(posedge rdclk);
     output pop;
     input empty;
     input rddata;
-  endclocking
+  endclocking*/
 
   //read modport for testbench
-  modport rdmp (clocking rdcb);
+  modport rdmp (input rdclk,
+                output pop,
+                input empty,
+                input rddata);
 
 endinterface

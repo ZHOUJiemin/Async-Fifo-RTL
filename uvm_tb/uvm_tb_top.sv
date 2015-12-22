@@ -86,10 +86,10 @@ module uvm_tb_top;
     $dumpon;
 
     //put the interface into the resource database
-    uvm_config_db#(virtual async_fifo_if)::set(uvm_root::get(), "*", "interface", intf);
+    uvm_config_db#(virtual async_fifo_if)::set(uvm_root::get(), "*", "async_fifo_if", intf);
 
     //this is the function to start everything
-    run_test();
+    run_test("base_test");
     $dumpoff;
   end
 

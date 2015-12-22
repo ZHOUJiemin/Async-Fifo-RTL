@@ -60,25 +60,25 @@ class trans_monitor extends uvm_monitor;    //unlike the driver, no need to para
 
   virtual task collect_push_data();
     forever begin
-      while(vif.wrcb.full)  //if full, wait
-        @ vif.wrcb;
-      if(vif.wrcb.push) begin  //if push is asserted
-        collected_tx.wrdata = vif.wrcb.wrdata;
+      while(vif.full)  //if full, wait
+        @ vif.wrclk;
+      if(vif.push) begin  //if push is asserted
+        collected_tx.wrdata = vif.wrdata;
         $cast(cloned_tx, collected_tx.clone());
         item_collected_port.write(cloned_tx);
         collected_data_num ++;
       end
-      @ vif.wrcb;
+      @ vif.wrclk;
     end
   endtask
 
   virtual task collect_pop_data();
     forever begin
-      while(vif.rdcb.empty) //if empty, wait
-        @ vif.rdcb;
-      if(vif.rdcb.pop) begin//if pop is asserted
-        @vif.rdcb;
-        collected_tx.rddata = vif.rdcb.rddata;
+      while(vif.empty) //if empty, wait
+        @ vif.rdclk;
+      if(vif.pop) begin//if pop is asserted
+        @vif.rdclk;
+        collected_tx.rddata = vif.rddata;
         $cast(cloned_tx, collected_tx.clone());
         item_collected_port.write(cloned_tx);
         collected_data_num ++;

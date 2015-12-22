@@ -41,11 +41,11 @@ class trans extends uvm_sequence_item;  //shall be parameterised maybe by using 
     if (trans_type == WRITE)
       //display("Write Transaction\nWrite Data = %0h, Delay = %0d Cycles\n", wrdata, delay);
       //use uvm macros!
-      `uvm_info("WRTRANS", $sformat("Write Transaction\nWrite Data = %0h, Delay = %0d Cycles\n", wrdata, delay) ,UVM_LOW)
+      `uvm_info("WRTRANS", $sformatf("SFORMAT","Write Transaction\nWrite Data = %0h, Delay = %0d Cycles\n", wrdata, delay) ,UVM_LOW)
     else if(trans_type == READ)
       //display("Read Transaction\nDelay = %0d Cycles\n", delay);
       //use uvm macros!
-      `uvm_info("RDTRANS", $sformat("Read Transaction\nDelay = %0d Cycles\n", delay), UVM_LOW)
+      `uvm_info("RDTRANS", $sformatf("SFORMAT","Read Transaction\nDelay = %0d Cycles\n", delay), UVM_LOW)
     else
       //this is not supposed to happen
       `uvm_error("NGTRANS", "Wrong Type of Transaction!\n")

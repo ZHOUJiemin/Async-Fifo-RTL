@@ -31,7 +31,7 @@ class trans_driver extends uvm_driver #(trans);
     super.build_phase(phase);
     //get configuration from the configure database
     //get virtual interface
-    if(!uvm_config_db#(virtual async_fifo_if)::get(this, "", "interface", vif))
+    if(!uvm_config_db#(virtual async_fifo_if)::get(this, "", "async_fifo_if", vif))
       `uvm_fatal("NG_IF", {"virtual interface must be set for: ", get_full_name(), ".vif"})
     `uvm_info(get_full_name(), "Build stage complete.", UVM_LOW)
   endfunction
@@ -74,26 +74,26 @@ class trans_driver extends uvm_driver #(trans);
 
   virtual task push_tx(trans tx);
     repeat(tx.delay)
-      @ vif.wrcb;
-    vif.wrcb.push <= 1'b 1;
+      @ vif.wrclk;
+    vif.push <= 1'b 1;
     //wait until full flag is de-asserted
-    while(vif.wrcb.full)
-      @ vif.wrcb;
+    while(vif.full)
+      @ vif.wrclk;
     //if not full, transaction is done at the current cycle
-    vif.wrcb.push <= 1'b 0;
-    `uvm_info(get_type_name(), $sformatf("Push Data In: %0h @ %0t", vif.wrcb.wrdata, $time), UVM_LOW)
+    vif.push <= 1'b 0;
+    `uvm_info(get_type_name(), $sformatf("Push Data In: %0h @ %0t", vif.wrdata, $time), UVM_LOW)
   endtask
 
   virtual task pop_tx(trans tx);
     repeat(tx.delay)
-      @ vif.rdcb;
-    vif.rdcb.pop <= 1'b 1;
+      @ vif.rdclk;
+    vif.pop <= 1'b 1;
     //wait until empty flag is deasserted
-    while(vif.rdcb.empty)
-      @ vif.rdcb;
+    while(vif.empty)
+      @ vif.rdclk;
     //if not empty, transaction will be done at the current cycle
     //then it is OK to deassert the pop signal
-    vif.rdcb.pop <= 1'b 0;
+    vif.pop <= 1'b 0;
     read_cmd_sent.put(tx);
   endtask
 
@@ -101,9 +101,9 @@ class trans_driver extends uvm_driver #(trans);
     trans tx;
     forever begin
       read_cmd_sent.get(tx);
-      @ vif.rdcb;
-      `uvm_info(get_type_name(), $sformatf("Popped Data Out: %0h @ %0t", vif.rdcb.rddata, $time), UVM_LOW)
-      tx.rddata = vif.rdcb.rddata;
+      @ vif.rdclk;
+      `uvm_info(get_type_name(), $sformatf("Popped Data Out: %0h @ %0t", vif.rddata, $time), UVM_LOW)
+      tx.rddata = vif.rddata;
       //put the item back to the sequencer
       seq_item_port.put(tx);
     end
